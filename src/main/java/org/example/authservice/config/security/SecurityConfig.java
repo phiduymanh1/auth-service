@@ -59,10 +59,9 @@ public class SecurityConfig {
 
   @Bean
   public org.springframework.security.oauth2.jwt.JwtDecoder jwtDecoder() {
-    javax.crypto.SecretKey key = new javax.crypto.spec.SecretKeySpec(
-            secretKey.getBytes(java.nio.charset.StandardCharsets.UTF_8),
-            "HmacSHA256"
-    );
+    javax.crypto.SecretKey key =
+        new javax.crypto.spec.SecretKeySpec(
+            secretKey.getBytes(java.nio.charset.StandardCharsets.UTF_8), "HmacSHA256");
 
     return NimbusJwtDecoder.withSecretKey(key).build();
   }
