@@ -14,9 +14,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
 
-/**
- * Custom authentication entry point for JWT-based authentication.
- */
+/** Custom authentication entry point for JWT-based authentication. */
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
@@ -37,6 +35,5 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
     ApiResponse<Void> body = responseUtil.error(MessageConst.AUTH_ERROR);
 
     response.getWriter().write(objectMapper.writeValueAsString(body));
-
   }
 }

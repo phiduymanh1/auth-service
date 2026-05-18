@@ -3,31 +3,28 @@ package org.example.authservice.utils.jwt;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import java.nio.charset.StandardCharsets;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+import javax.crypto.SecretKey;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import javax.crypto.SecretKey;
-import java.nio.charset.StandardCharsets;
-import java.security.Key;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-
 @Service
 public class JwtUtil {
 
-  @Value("${app.jwt.secret}")
+  @Value("${spring.security.oauth2.resourceserver.jwt.secret-key}")
   private String secret;
 
-  @Value("${app.jwt.access-token-expiration}")
+  @Value("${app.jwt.access-token-expiration:3600000}")
   private Long expirationAccessToken;
 
-  @Value("${app.jwt.refresh-token-expiration}")
+  @Value("${app.jwt.refresh-token-expiration:86400000}")
   private Long expirationRefreshToken;
 
   /** Get signing key from secret */
@@ -36,43 +33,43 @@ public class JwtUtil {
   }
 
   /** Generate access token */
-  public String generateAccessToken(UserDetails userDetails, UUID applicationId, List<String> permissions) {
-    List<String> roles = userDetails.getAuthorities().stream()
-            .map(GrantedAuthority::getAuthority)
-            .toList();
+  public String generateAccessToken(
+      UserDetails userDetails, UUID applicationId, List<String> permissions) {
+    List<String> roles =
+        userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
 
     return Jwts.builder()
-            .subject(userDetails.getUsername())
-            .id(UUID.randomUUID().toString())
-            .issuedAt(new Date())
-            .expiration(new Date(System.currentTimeMillis() + expirationAccessToken))
-            .claim("applicationId", applicationId.toString())
-            .claim("roles", roles)
-            .claim("permissions", permissions)
-            .signWith(getKey())
-            .compact();
+        .subject(userDetails.getUsername())
+        .id(UUID.randomUUID().toString())
+        .issuedAt(new Date())
+        .expiration(new Date(System.currentTimeMillis() + expirationAccessToken))
+        .claim("applicationId", applicationId.toString())
+        .claim("roles", roles)
+        .claim("permissions", permissions)
+        .signWith(getKey())
+        .compact();
   }
 
   /** Generate refresh token */
   public String generateRefreshToken(String username, UUID applicationId) {
     return Jwts.builder()
-            .subject(username)
-            .id(UUID.randomUUID().toString())
-            .issuedAt(new Date())
-            .expiration(new Date(System.currentTimeMillis() + expirationRefreshToken))
-            .claim("applicationId", applicationId.toString())
-            .signWith(getKey())
-            .compact();
+        .subject(username)
+        .id(UUID.randomUUID().toString())
+        .issuedAt(new Date())
+        .expiration(new Date(System.currentTimeMillis() + expirationRefreshToken))
+        .claim("applicationId", applicationId.toString())
+        .signWith(getKey())
+        .compact();
   }
 
-  /** Build JWT token */
+  /** Build JWT token (Đã sửa lại cú pháp chuẩn mới 0.12.x) */
   public String buildToken(String username, Long exp) {
     return Jwts.builder()
-        .setSubject(username)
-        .setId(UUID.randomUUID().toString()) // TODO: add blacklist token
-        .setIssuedAt(new Date())
-        .setExpiration(new Date(System.currentTimeMillis() + exp))
-        .signWith(getKey(), SignatureAlgorithm.HS256)
+        .subject(username)
+        .id(UUID.randomUUID().toString())
+        .issuedAt(new Date())
+        .expiration(new Date(System.currentTimeMillis() + exp))
+        .signWith(getKey())
         .compact();
   }
 
@@ -86,17 +83,7 @@ public class JwtUtil {
     return parseClaims(token).map(claims -> claims.get("applicationId", String.class)).orElse(null);
   }
 
-  /** Validate access token */
-  public boolean isAccessTokenValid(String token, UserDetails userDetails) {
-    return parseClaims(token)
-        .map(
-            c ->
-                c.getSubject().equals(userDetails.getUsername())
-                    && c.getExpiration().after(new Date()))
-        .orElse(false);
-  }
-
-  /** Validate refresh token */
+  /** Validate refresh token (Vẫn cần để validate thủ công tại API /refresh-token) */
   public boolean isRefreshTokenValid(String token) {
     return parseClaims(token).map(c -> c.getExpiration().after(new Date())).orElse(false);
   }
@@ -105,25 +92,21 @@ public class JwtUtil {
   private Optional<Claims> parseClaims(String token) {
     try {
       return Optional.of(
-
-              Jwts.parser()
-                      .verifyWith(getKey())
-                      .build()
-                      .parseSignedClaims(token)
-                      .getPayload()
-
-      );
+          Jwts.parser().verifyWith(getKey()).build().parseSignedClaims(token).getPayload());
     } catch (JwtException e) {
       return Optional.empty();
     }
   }
 
-  /** Get JTI from token */
+  /** Get JTI (Token ID) -> Rất cần để quản lý Blacklist khi làm tính năng Logout */
   public String getJti(String token) {
     return parseClaims(token).map(Claims::getId).orElse(null);
   }
 
-  /** Get remaining time from token */
+  /**
+   * Get remaining time -> Dùng để set thời gian TTL (Time-to-live) khi ném token vào Redis
+   * Blacklist
+   */
   public long getRemainingTime(String token) {
     return parseClaims(token)
         .map(Claims::getExpiration)

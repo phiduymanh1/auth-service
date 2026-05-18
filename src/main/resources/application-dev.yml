@@ -1,0 +1,20 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/ecosystem_auth_service?options=-c%20timezone=Asia/Ho_Chi_Minh
+    username: postgres
+    password: manh992005
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          secret-key: "secretmanhphi12345_saas_aa_32_dd_dd_ddd_ddd_dd"
+
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+
+app:
+  jwt:
+    access-token-expiration: 3600000
+    refresh-token-expiration: 86400000

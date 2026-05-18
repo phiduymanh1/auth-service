@@ -1,5 +1,7 @@
 package org.example.authservice.utils.response;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.example.authservice.dto.response.common.ApiResponse;
 import org.example.authservice.dto.response.common.FieldErrorResponse;
@@ -8,9 +10,6 @@ import org.example.authservice.enums.MessageConst;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Component;
-
-import java.time.LocalDateTime;
-import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -40,8 +39,7 @@ public class ApiResponseUtil {
     String msg =
         messageSource.getMessage(mesConst.getCode(), null, LocaleContextHolder.getLocale());
     return new ApiResponse<>(
-        new ResponseMetaData(false, mesConst.getCode(), msg, LocalDateTime.now(), List.of()),
-        null);
+        new ResponseMetaData(false, mesConst.getCode(), msg, LocalDateTime.now(), List.of()), null);
   }
 
   // Error 1 message with custom code
@@ -55,5 +53,4 @@ public class ApiResponseUtil {
     return new ApiResponse<>(
         new ResponseMetaData(false, code, message, LocalDateTime.now(), errors), null);
   }
-
 }

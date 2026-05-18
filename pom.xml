@@ -171,12 +171,6 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- Spring Cloud Gateway -->
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-gateway</artifactId>
-        </dependency>
-
     </dependencies>
 
     <!-- Spring Cloud dependency management -->

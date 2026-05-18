@@ -1,8 +1,6 @@
+server:
+  port: ${SERVER_PORT:8080}
+
 spring:
-  application:
-    name: auth-service
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          secret-key: "secretmanhphi12345_saas_aa_32_dd_dd_ddd_ddd_dd"
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:dev}

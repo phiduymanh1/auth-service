@@ -1,0 +1,11 @@
+spring:
+  datasource:
+    url: ${TEST_DB_URL:jdbc:postgresql://localhost:5432/elearning_auth_test}
+    username: ${TEST_DB_USERNAME:postgres}
+    password: ${TEST_DB_PASSWORD:password_local}
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          secret-key: ${TEST_JWT_SECRET_KEY:secretmanhphi12345_test_environment_key}
