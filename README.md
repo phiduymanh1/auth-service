@@ -13,7 +13,7 @@
 
 ## 3. Features
 - Centralized user account management.
-- Email/password authentication and OAuth2 login (Google, Facebook, ...).
+- Email/password authentication and OAuth2 login (Google, Facxebook, ...).
 - Role and Permission-based authorization per application.
 - Manage multiple applications/clients within the same auth system.
 - Support MFA (2FA) via OTP and backup codes.
