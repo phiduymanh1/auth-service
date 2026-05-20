@@ -1,5 +1,7 @@
 # auth-service
 
+en English: [README.en.md](README.md)
+
 ## 1. Giới thiệu
 - Hệ thống Auth Service được thiết kế như một trung tâm xác thực và phân quyền dùng chung cho nhiều ứng dụng trong hệ sinh thái. Service hỗ trợ quản lý tài khoản người dùng, phân quyền theo ứng dụng, xác thực đăng nhập, OAuth2, MFA, quản lý token bảo mật, ghi nhận lịch sử đăng nhập và audit log nhằm đảm bảo tính bảo mật, khả năng mở rộng và dễ dàng tích hợp cho các hệ thống vệ tinh trong tương lai.
 ## 2. Mục tiêu
