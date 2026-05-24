@@ -9,7 +9,7 @@ Authenticate user credentials and return JWT tokens for accessing ecosystem appl
 # Endpoint
 
 ```http
-POST /auth/login
+POST /api/{version}/auth/login
 ```
 
 ---

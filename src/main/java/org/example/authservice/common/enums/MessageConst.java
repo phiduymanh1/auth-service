@@ -1,4 +1,4 @@
-package org.example.authservice.enums;
+package org.example.authservice.common.enums;
 
 import lombok.Getter;
 

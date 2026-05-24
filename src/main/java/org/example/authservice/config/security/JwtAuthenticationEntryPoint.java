@@ -7,7 +7,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.example.authservice.dto.response.common.ApiResponse;
-import org.example.authservice.enums.MessageConst;
+import org.example.authservice.common.enums.MessageConst;
 import org.example.authservice.utils.response.ApiResponseUtil;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;

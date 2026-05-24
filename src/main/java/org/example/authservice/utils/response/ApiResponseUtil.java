@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.authservice.dto.response.common.ApiResponse;
 import org.example.authservice.dto.response.common.FieldErrorResponse;
 import org.example.authservice.dto.response.common.ResponseMetaData;
-import org.example.authservice.enums.MessageConst;
+import org.example.authservice.common.enums.MessageConst;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Component;
