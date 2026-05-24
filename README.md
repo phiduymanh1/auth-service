@@ -1,5 +1,7 @@
 # auth-service
 
+🇻🇳 Tiếng Việt: [README.vn.md](README.vn.md)
+
 ## 1. Introduction
 - The Auth Service is designed as a centralized authentication and authorization hub for multiple applications within the ecosystem. The service supports user account management, application-based authorization, login authentication, OAuth2, MFA, secure token management, login history tracking, and audit logging to ensure security, scalability, and easy integration with future satellite systems.
 
