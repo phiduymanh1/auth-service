@@ -1,7 +1,14 @@
 package org.example.authservice.controller;
 
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import org.example.authservice.common.constant.Const;
+import org.example.authservice.dto.request.LoginRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,7 +24,10 @@ public class AuthController {
 
   /** Login API */
   @PostMapping("/login")
-  public ResponseEntity<Object> login() {
+  public ResponseEntity<Object> login(
+      @RequestHeader(Const.AUTH_HEADER_CLIENT_ID) @NotBlank String clientId,
+      @Valid @RequestBody LoginRequest request,
+      HttpServletResponse response) {
     return null;
   }
 

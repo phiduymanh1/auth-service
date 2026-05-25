@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import javax.crypto.SecretKey;
+import org.example.authservice.common.constant.Const;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -43,7 +44,7 @@ public class JwtUtil {
         .id(UUID.randomUUID().toString())
         .issuedAt(new Date())
         .expiration(new Date(System.currentTimeMillis() + expirationAccessToken))
-        .claim("applicationId", applicationId.toString())
+        .claim(Const.APPLICATION_ID, applicationId.toString())
         .claim("roles", roles)
         .claim("permissions", permissions)
         .signWith(getKey())
@@ -57,12 +58,12 @@ public class JwtUtil {
         .id(UUID.randomUUID().toString())
         .issuedAt(new Date())
         .expiration(new Date(System.currentTimeMillis() + expirationRefreshToken))
-        .claim("applicationId", applicationId.toString())
+        .claim(Const.APPLICATION_ID, applicationId.toString())
         .signWith(getKey())
         .compact();
   }
 
-  /** Build JWT token (Đã sửa lại cú pháp chuẩn mới 0.12.x) */
+  /** Build JWT token */
   public String buildToken(String username, Long exp) {
     return Jwts.builder()
         .subject(username)
@@ -80,10 +81,12 @@ public class JwtUtil {
 
   /** Extract application ID from token */
   public String extractApplicationId(String token) {
-    return parseClaims(token).map(claims -> claims.get("applicationId", String.class)).orElse(null);
+    return parseClaims(token)
+        .map(claims -> claims.get(Const.APPLICATION_ID, String.class))
+        .orElse(null);
   }
 
-  /** Validate refresh token (Vẫn cần để validate thủ công tại API /refresh-token) */
+  /** Validate refresh token */
   public boolean isRefreshTokenValid(String token) {
     return parseClaims(token).map(c -> c.getExpiration().after(new Date())).orElse(false);
   }
@@ -98,15 +101,12 @@ public class JwtUtil {
     }
   }
 
-  /** Get JTI (Token ID) -> Rất cần để quản lý Blacklist khi làm tính năng Logout */
+  /** Get JTI (Token ID) */
   public String getJti(String token) {
     return parseClaims(token).map(Claims::getId).orElse(null);
   }
 
-  /**
-   * Get remaining time -> Dùng để set thời gian TTL (Time-to-live) khi ném token vào Redis
-   * Blacklist
-   */
+  /** Get remaining time Blacklist */
   public long getRemainingTime(String token) {
     return parseClaims(token)
         .map(Claims::getExpiration)
