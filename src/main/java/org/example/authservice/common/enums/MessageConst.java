@@ -8,7 +8,10 @@ public enum MessageConst {
   AUTH_ERROR("E-AUTH-001"),
 
   // System - error messages
-  SYSTEM_INTERNAL_ERROR("E-SYS-001");
+  SYSTEM_INTERNAL_ERROR("E-SYS-001"),
+
+  // Auth - success messages
+  AUTH_LOGIN_SUCCESS("I-AUTH-001");
 
   private final String code;
 
